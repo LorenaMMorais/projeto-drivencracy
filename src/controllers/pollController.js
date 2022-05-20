@@ -29,3 +29,13 @@ export async function setPoll(req, res){
         res.sendStatus(500);
     }
 }
+
+export async function getPoll(req, res){
+    try{
+        const poll = await db.collection('poll').find().toArray();
+        res.send(poll);
+    }catch (error){
+        console.log(error);
+        res.sendStatus(500);
+    }
+}
