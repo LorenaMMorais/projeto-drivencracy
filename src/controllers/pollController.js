@@ -6,7 +6,7 @@ const pollSchema = joi.object({
     expireAt: joi.string() 
 });
     
-export async function getPoll(req, res){
+export async function setPoll(req, res){
     console.log(req.body);
 
     const validation = pollSchema.validate(req.body);
