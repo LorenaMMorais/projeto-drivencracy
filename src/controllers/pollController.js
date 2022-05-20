@@ -23,7 +23,7 @@ export async function setPoll(req, res){
 
     try{
         await db.collection('poll').insertOne(poll);
-        res.send(201);
+        res.sendStatus(201);
     }catch(error){
         console.log(error);
         res.sendStatus(500);
