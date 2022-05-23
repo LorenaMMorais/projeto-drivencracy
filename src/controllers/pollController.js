@@ -2,23 +2,8 @@ import db from '../db.js';
 import Joi from 'joi';
 import { ObjectId } from 'mongodb';
 import dayjs from 'dayjs';
-
- 
-const pollSchema = Joi.object({
-    title: Joi.string().required(),
-    expireAt: Joi.optional() 
-});
     
 export async function setPoll(req, res){
-    console.log(req.body);
-
-    const validation = pollSchema.validate(req.body);
-
-    if(validation.error){
-        res.status(422).send('O título deve ser preenchido!');
-        return
-    }
-
     const poll = {
         title: req.body.title,
         expireAt: req.body.expireAt
@@ -83,7 +68,7 @@ export async function countVotes(req, res){
             }
         }
 
-        const poll = await db.collection('poll').find({ _id: new ObjectId(id) }).toArray();
+        const poll = await db.collection('poll').findOne({ _id: new ObjectId(id) }).toArray();
 
         res.send({
             ...poll,
