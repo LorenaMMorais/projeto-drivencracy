@@ -1,9 +1,11 @@
 import db from '../db.js';
-import joi from 'joi';
+import Joi from 'joi';
+import { ObjectId } from 'mongodb';
+
  
-const pollSchema = joi.object({
-    title: joi.string().required(),
-    expireAt: joi.string() 
+const pollSchema = Joi.object({
+    title: Joi.string().required(),
+    expireAt: Joi.string() 
 });
     
 export async function setPoll(req, res){
@@ -35,6 +37,20 @@ export async function getPoll(req, res){
         const poll = await db.collection('poll').find().toArray();
         res.send(poll);
     }catch (error){
+        console.log(error);
+        res.sendStatus(500);
+    }
+}
+
+export async function getChoiceOptions(req, res){
+    const id = req.params.id;
+    try{
+        const choiceList = await db.collection('choice').find({ poolId: id }).toArray();
+        if(choiceList.length === 0){
+            return res.status(404).send('Enquete não encontrada!');
+        }
+        res.send(choiceList);
+    }catch(error){
         console.log(error);
         res.sendStatus(500);
     }
