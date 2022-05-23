@@ -27,6 +27,14 @@ export async function setChoice(req, res){
         if(!searchPoll){
             return res.status(404).send('Enquete não encontrada!');
         }
+        
+        const expiredDate = searchPoll.expiredAt;
+
+        const isExpired = dayjs().isAfter(expiredDate, 'days');
+
+        if(isExpired){
+            return res.status(403).send('Enquete expirada!');
+        }
 
         const searchChoice = await db.collection('choice').findOne({title: choice.title});
 
@@ -54,6 +62,16 @@ export async function setVote(req, res){
 
         if(!isChoice){
             return res.status(404).send('Esta opção de voto não existe!');
+        }
+
+        const searchPoll = await db.collection('poll').findOne({ _id: new ObjectId(isChoice.poolId)});
+
+        const expiredDate = searchPoll.expiredAt;
+
+        const isExpired = dayjs().isAfter(expiredDate, 'days');
+
+        if(isExpired){
+            return res.status(403).send('Enquete expirada!');
         }
 
         await db.collection('vote').insertOne(vote);
