@@ -9,5 +9,5 @@ app.use(json());
 app.use(router);
 
 app.listen(process.env.PORT, () => {
-    console.log('Servidor no ar');
+    console.log('Server running on port ' + process.env.PORT);
 }); 
