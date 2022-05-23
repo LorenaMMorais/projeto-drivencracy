@@ -42,7 +42,7 @@ export async function getChoiceOptions(req, res){
         res.send(choiceList);
     }catch(error){
         console.log(error);
-        res.sendStatus(500);
+        res.status(500).send(error.message);
     }
 }
 
@@ -54,6 +54,7 @@ export async function countVotes(req, res){
         const vote = await db.collection('vote').find({ }).toArray();
         const counter = [];
         let p = 0;
+        let m = 0;
 
         for(let i = 0; i < choice.length; i++){
             counter.push(0);
@@ -63,7 +64,10 @@ export async function countVotes(req, res){
             for( let j = 0; j < vote.length; j++){
                 if(choice[i]._id == (new ObjectId(vote[j].choiceId).toString())){
                     counter[i]++;
-                    p = i;
+                    if(counter[i] > m){
+                        p = i;
+                        m = counter[i];
+                    }
                 }
             }
         }
@@ -79,6 +83,6 @@ export async function countVotes(req, res){
         });
     }catch(error){
         console.log(error);
-        res.sendStatus(500);
+        res.status(500).send(error.message);
     }
 }
